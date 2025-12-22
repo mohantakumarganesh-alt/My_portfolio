@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System | Ganesh Kumar Mohanta</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .code-block {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            color: #f8fafc;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-header {
+            padding-top: 120px;
+            padding-bottom: 50px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-color);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="index.html" class="logo">Ganesh<span class="accent">.</span></a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="project-header">
+                <a href="index.html#projects" class="back-link"><i class="fas fa-arrow-left"></i> Back to Projects</a>
+                <h1 class="hero-title">Student Management System</h1>
+                <p class="hero-subtitle">Python • Tkinter • SQLite</p>
+            </div>
+
+            <section class="section">
+                <h2 class="section-title">Overview</h2>
+                <p class="hero-description" style="margin: 0 auto;">
+                    A desktop GUI application built with Python and Tkinter to manage student records.
+                    It uses SQLite as a backend database to store student details like Roll No, Name, Email, Gender,
+                    Contact, and DOB.
+                    The application supports full CRUD operations (Create, Read, Update, Delete) and includes a search
+                    functionality.
+                </p>
+            </section>
+
+            <section class="section">
+                <h2 class="section-title">Source Code</h2>
+                <div class="code-block">
+                    <pre>
+import tkinter as tk
+from tkinter import ttk, messagebox
+import sqlite3
+
+class StudentManagementSystem:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Student Management System")
+        self.root.geometry("1350x700+0+0")
+        
+        title = tk.Label(self.root, text="Student Management System", bd=10, relief=tk.GROOVE, font=("times new roman", 40, "bold"), bg="yellow", fg="red")
+        title.pack(side=tk.TOP, fill=tk.X)
+        
+        # ... (GUI Setup Code) ...
+
+    def add_student(self):
+        if self.Roll_No_var.get() == "" or self.Name_var.get() == "":
+            messagebox.showerror("Error", "All fields are required")
+        else:
+            con = sqlite3.connect(database="students.db")
+            cur = con.cursor()
+            cur.execute("insert into students values(?,?,?,?,?,?,?)", (self.Roll_No_var.get(), self.Name_var.get(), self.Email_var.get(), self.Gender_var.get(), self.Contact_var.get(), self.Dob_var.get(), self.txt_address.get('1.0', tk.END)))
+            con.commit()
+            self.fetch_data()
+            self.clear()
+            con.close()
+            messagebox.showinfo("Success", "Record has been inserted")
+
+    # ... (Other CRUD Methods) ...
+</pre>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Ganesh Kumar Mohanta. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

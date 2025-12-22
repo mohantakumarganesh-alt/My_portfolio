@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog App Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .blog-header {
+            border-bottom: 1px solid #e5e5e5;
+            background: #fff;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .blog-title {
+            font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+            margin-bottom: 2rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            background: #ddd;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-btn">← Back to Portfolio</a>
+
+    <header class="blog-header">
+        <div class="container">
+            <h1 class="blog-title">The Developer's Blog</h1>
+            <p class="lead text-muted">Thoughts, stories and ideas.</p>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8" id="blog-posts">
+                <!-- Post 1 -->
+                <div class="card blog-post">
+                    <img src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        class="card-img-top" alt="Django">
+                    <div class="card-body">
+                        <h2 class="card-title">Getting Started with Django</h2>
+                        <p class="card-text text-muted">Posted on November 22, 2024 by Ganesh</p>
+                        <p class="card-text">Django is a high-level Python web framework that encourages rapid
+                            development and clean, pragmatic design. Built by experienced developers, it takes care of
+                            much of the hassle of web development...</p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <button class="btn btn-outline-danger like-btn" onclick="toggleLike(this)">
+                                ❤️ <span class="like-count">12</span> Likes
+                            </button>
+                            <button class="btn btn-primary" onclick="toggleComments('comment-section-1')">
+                                Read More & Comments
+                            </button>
+                        </div>
+
+                        <!-- Hidden Comments Section -->
+                        <div id="comment-section-1" class="mt-4" style="display: none;">
+                            <hr>
+                            <h5>Comments</h5>
+                            <div class="mb-3">
+                                <strong>Alice:</strong> Great intro to Django!
+                            </div>
+                            <div class="mb-3">
+                                <strong>Bob:</strong> Very helpful, thanks.
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Add a comment...">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="addComment(this)">Post</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post 2 -->
+                <div class="card blog-post">
+                    <img src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                        class="card-img-top" alt="Python">
+                    <div class="card-body">
+                        <h2 class="card-title">Why Python for Backend?</h2>
+                        <p class="card-text text-muted">Posted on November 20, 2024 by Ganesh</p>
+                        <p class="card-text">Python is one of the most popular programming languages today, especially
+                            for backend development. Its readability, vast ecosystem of libraries, and frameworks like
+                            Django and Flask make it a top choice...</p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <button class="btn btn-outline-danger like-btn" onclick="toggleLike(this)">
+                                ❤️ <span class="like-count">45</span> Likes
+                            </button>
+                            <button class="btn btn-primary" onclick="toggleComments('comment-section-2')">
+                                Read More & Comments
+                            </button>
+                        </div>
+
+                        <!-- Hidden Comments Section -->
+                        <div id="comment-section-2" class="mt-4" style="display: none;">
+                            <hr>
+                            <h5>Comments</h5>
+                            <div class="mb-3">
+                                <strong>Charlie:</strong> Python is the best!
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Add a comment...">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="addComment(this)">Post</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <!-- Search Widget -->
+                <div class="card mb-4">
+                    <div class="card-header">Search</div>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search for..."
+                                onkeyup="filterPosts()">
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary" type="button">Go!</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">About</div>
+                    <div class="card-body">
+                        <p>This is a demo of the Blog Application built with Django and Bootstrap. It showcases the
+                            frontend layout and styling.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Categories</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a href="#">Web Development</a></li>
+                        <li class="list-group-item"><a href="#">Python</a></li>
+                        <li class="list-group-item"><a href="#">Tutorials</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 text-muted border-top mt-5">
+        <p>&copy; 2024 Blog App Demo. Built by Ganesh.</p>
+    </footer>
+
+    <script>
+        // Like Functionality
+        function toggleLike(btn) {
+            const countSpan = btn.querySelector('.like-count');
+            let count = parseInt(countSpan.innerText);
+
+            if (btn.classList.contains('active')) {
+                count--;
+                btn.classList.remove('active');
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-outline-danger');
+            } else {
+                count++;
+                btn.classList.add('active');
+                btn.classList.add('btn-danger');
+                btn.classList.remove('btn-outline-danger');
+            }
+            countSpan.innerText = count;
+        }
+
+        // Toggle Comments
+        function toggleComments(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        // Add Comment
+        function addComment(btn) {
+            const input = btn.previousElementSibling;
+            const text = input.value.trim();
+            if (text) {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'mb-3';
+                commentDiv.innerHTML = `<strong>You:</strong> ${text}`;
+
+                // Insert before the input group
+                const inputGroup = btn.parentElement;
+                inputGroup.parentElement.insertBefore(commentDiv, inputGroup);
+
+                input.value = '';
+            }
+        }
+
+        // Search Functionality
+        function filterPosts() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const posts = document.getElementsByClassName('blog-post');
+
+            for (let i = 0; i < posts.length; i++) {
+                const title = posts[i].querySelector('.card-title').innerText;
+                const text = posts[i].querySelector('.card-text').innerText;
+                if (title.toLowerCase().includes(filter) || text.toLowerCase().includes(filter)) {
+                    posts[i].style.display = "";
+                } else {
+                    posts[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

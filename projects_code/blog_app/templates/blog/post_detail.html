@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4">
+                {% if post.image_url %}
+                <img src="{{ post.image_url }}" class="card-img-top mb-3" alt="{{ post.title }}">
+                {% endif %}
+                {% if post.created_at %}
+                <div class="date text-muted mb-2">
+                    {{ post.created_at }}
+                </div>
+                {% endif %}
+                <h1>{{ post.title }}</h1>
+                <hr>
+                <p>{{ post.content|linebreaksbr }}</p>
+
+                <div class="mt-4">
+                    <h3>Comments</h3>
+                    <p>Comments functionality coming soon!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

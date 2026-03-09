@@ -1,17 +1,57 @@
 {% extends "blog/base.html" %}
 {% block content %}
-    <h1 class="mb-4">Latest Posts</h1>
+    <!-- Hero Section -->
+    <div class="p-5 text-center bg-white rounded-4 shadow-sm border mb-5" style="background: linear-gradient(135deg, rgba(79,70,229,0.05) 0%, rgba(255,255,255,1) 100%);">
+        <h1 class="display-4 fw-bold text-dark mb-3">Welcome to Django Blog</h1>
+        <p class="lead text-muted mb-4 opacity-75">Discover articles, tutorials, and insights about Python and Web Development.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">Start Reading</a>
+        {% endif %}
+    </div>
+
+    <!-- Posts Grid -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3 fw-bold mb-0">Latest Articles</h2>
+        <span class="badge bg-primary rounded-pill px-3 py-2 fw-normal">{{ posts|length }} Posts</span>
+    </div>
+
+    <div class="row g-4">
     {% for post in posts %}
-        <article class="content-section p-4 mb-4 bg-white shadow-sm rounded">
-            <div class="d-flex justify-content-between align-items-center mb-2 article-metadata">
-                <a class="text-decoration-none fw-bold text-primary" href="#">{{ post.author }}</a>
-                <small class="text-muted">{{ post.created_at|date:"F d, Y" }}</small>
-            </div>
-            <h2><a class="article-title fs-4" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
-            <p class="article-content mt-2">{{ post.content|truncatewords:30 }}</p>
-            <a class="btn btn-sm btn-outline-secondary mt-2" href="{% url 'post-detail' post.id %}">Read More</a>
-        </article>
+        <div class="col-md-6 mb-2">
+            <article class="content-section h-100 p-0 overflow-hidden d-flex flex-column" style="margin-bottom: 0;">
+                <div class="p-4 flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center mb-3 text-muted small">
+                        <span class="d-flex align-items-center">
+                            <i class="bi bi-person-circle me-2 fs-5 text-primary"></i>
+                            <span class="fw-medium">{{ post.author }}</span>
+                        </span>
+                        <span><i class="bi bi-calendar3 me-1"></i>{{ post.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <h3 class="h4 fw-bold mb-3">
+                        <a class="article-title text-decoration-none stretched-link" href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+                    </h3>
+                    <p class="article-content text-muted fs-6 mb-0">{{ post.content|truncatewords:20 }}</p>
+                </div>
+            </article>
+        </div>
     {% empty %}
-        <div class="alert alert-info">No posts available right now. Be the first to publish one!</div>
+        <div class="col-12">
+            <div class="alert alert-info border-0 shadow-sm rounded-3 py-4 text-center">
+                <i class="bi bi-journal-x display-6 d-block mb-3 text-info opacity-50"></i>
+                <span class="fs-5">No posts available right now. Be the first to publish one!</span>
+            </div>
+        </div>
     {% endfor %}
+    </div>
+    
+    <style>
+        .content-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: rgba(79, 70, 229, 0.3) !important;
+        }
+        .article-title:hover {
+            color: var(--primary-color) !important;
+        }
+    </style>
 {% endblock %}

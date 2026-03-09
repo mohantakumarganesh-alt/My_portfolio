@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import UserRegisterForm
-from .models import Post
+from .forms import UserRegisterForm, CommentForm
+from .models import Post, Comment
 
 def register(request):
     if request.method == 'POST':
@@ -25,6 +26,25 @@ class PostListView(ListView):
     
 class PostDetailView(DetailView):
     model = Post
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        return context
+
+@login_required
+def add_comment_to_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            messages.success(request, "Your comment has been added.")
+            return redirect('post-detail', pk=post.pk)
+    return redirect('post-detail', pk=post.pk)
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post

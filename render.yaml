@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: blog-app
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "cd projects_code/blog_app && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "cd projects_code/blog_app && gunicorn blog_project.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com"
+      - key: SECURE_SSL_REDIRECT
+        value: true
+      - key: SESSION_COOKIE_SECURE
+        value: true
+      - key: CSRF_COOKIE_SECURE
+        value: true

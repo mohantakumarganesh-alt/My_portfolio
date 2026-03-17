@@ -963,3 +963,44 @@ body {
         align-items: stretch;
     }
 }
+
+/* --- Fine-grained optimizations for Small Screens --- */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-cta {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .hero-cta .btn {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    .section {
+        padding: 80px 0; /* Reduced spacing on small mobiles */
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .skills-wrapper {
+        padding: 1.5rem;
+    }
+
+    .contact-wrapper {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .stats-grid {
+        gap: 1.25rem;
+    }
+}

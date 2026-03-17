@@ -6,62 +6,120 @@
     <title>{% block title %}Student SMS Dashboard{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --surface-color: rgba(30, 41, 59, 0.7);
-            --accent-color: #38bdf8;
-            --text-primary: #f8fafc;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-dark: #0d1527;
+            --surface: rgba(255, 255, 255, 0.04);
+            --accent: #0ea5e9;
+            --accent-glow: rgba(14, 165, 233, 0.25);
+            --border-glow: rgba(255, 255, 255, 0.08);
+            --text-heading: #f8fafc;
+            --text-muted: #94a3b8;
         }
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
+            background: #0d1527;
+            background-image: 
+                radial-gradient(circle at 100% 0%, rgba(14, 165, 233, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(79, 70, 229, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, #111b33 0%, #0d1527 100%);
+            background-attachment: fixed;
+            color: var(--text-heading);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
+        .text-muted { color: var(--text-muted) !important; }
         .sidebar {
-            height: 100vh;
-            background: rgba(15, 23, 42, 0.95);
-            border-right: 1px solid var(--glass-border);
+            height: calc(100vh - 2rem);
+            margin: 1rem;
+            background: rgba(15, 23, 42, 0.35);
+            backdrop-filter: blur(24px) saturate(120%);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            padding-top: 2rem;
-            z-index: 100;
+            top: 0; left: 0; width: 240px;
+            padding-top: 2rem; z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         .main-content {
-            margin-left: 250px;
-            padding: 2rem;
+            margin-left: 260px;
+            padding: 2.5rem;
             min-height: 100vh;
         }
         .nav-link {
-            color: #94a3b8;
-            padding: 0.8rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
+            color: var(--text-muted);
+            padding: 0.85rem 1.5rem;
+            display: flex; align-items: center; gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
         }
+        .nav-link i { font-size: 1.1rem; opacity: 0.7; }
         .nav-link:hover, .nav-link.active {
-            color: var(--accent-color);
-            background: rgba(56, 189, 248, 0.1);
-            border-left: 3px solid var(--accent-color);
+            color: #fff !important;
+            background: linear-gradient(90deg, rgba(14, 165, 233, 0.15) 0%, transparent 100%);
+            border-left: 4px solid var(--accent);
         }
-        .stat-card {
-            background: var(--surface-color);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s;
+        .nav-link:hover i { color: var(--accent); opacity: 1; }
+        
+        /* Cinematic Card system */
+        .card, .stat-card {
+            background: var(--surface) !important;
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glow) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .stat-card:hover { font-transform: translateY(-3px); }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--accent-glow);
+            border-color: rgba(14, 165, 233, 0.25) !important;
+        }
+
+        /* Upgrading Tables */
+        .table { 
+            background: transparent !important; 
+            --bs-table-bg: transparent !important;
+            margin-bottom: 0; 
+        }
+        .table th {
+            color: var(--accent) !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            border-bottom: 2px solid var(--border-glow) !important;
+            padding: 1rem 0.75rem;
+            background-color: transparent !important;
+        }
+        .table td {
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            font-size: 0.9rem;
+            padding: 0.9rem 0.75rem;
+            background-color: transparent !important;
+            color: #cbd5e1;
+        }
+        .table-striped>tbody>tr:nth-of-type(odd)>* {
+            background-color: rgba(255, 255, 255, 0.01) !important;
+        }
+        .badge { font-weight: 500; border-radius: 6px; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card:hover, .stat-card:hover {
+            transform: translateY(-6px) !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +136,9 @@
             </li>
             <li class="nav-item">
                 <a href="{% url 'student_add' %}" class="nav-link"><i class="fas fa-user-plus"></i> Add Student</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'attendance_bulk' %}" class="nav-link"><i class="fas fa-calendar-check"></i> Attendance</a>
             </li>
         </ul>
     </div>

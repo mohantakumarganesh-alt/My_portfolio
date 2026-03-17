@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ student.name }} | Profile{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-4 border-bottom border-secondary">
+    <h1 class="h2">Student Profile</h1>
+    <a href="{% url 'student_list' %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-arrow-left"></i> Back to Directory</a>
+</div>
+
+<div class="row g-4">
+    <!-- Profile Card -->
+    <div class="col-md-4">
+        <div class="card bg-dark border-secondary p-4 text-center shadow">
+            {% if student.photo %}
+                <img src="{{ student.photo.url }}" class="rounded-circle mx-auto mb-3" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid var(--accent-color);">
+            {% else %}
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                    <i class="fas fa-user-alt fa-3x text-dark"></i>
+                </div>
+            {% endif %}
+            <h4 class="fw-bold mb-1">{{ student.name }}</h4>
+            <span class="badge bg-secondary mb-3">Roll: {{ student.roll_no }}</span>
+            <hr class="border-secondary">
+            <div class="text-start small">
+                <p class="mb-2"><strong><i class="fas fa-envelope text-muted me-2"></i></strong> {{ student.email }}</p>
+                <p class="mb-2"><strong><i class="fas fa-phone text-muted me-2"></i></strong> {{ student.contact }}</p>
+                <p class="mb-2"><strong><i class="fas fa-venus-mars text-muted me-2"></i></strong> {{ student.get_gender_display }}</p>
+                <p class="mb-2"><strong><i class="fas fa-calendar-alt text-muted me-2"></i></strong> {{ student.dob }}</p>
+                <p class="mb-0"><strong><i class="fas fa-map-marker-alt text-muted me-2"></i></strong> {{ student.address }}</p>
+            </div>
+            <div class="d-grid gap-2 mt-4">
+                <a href="{% url 'student_edit' student.pk %}" class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i> Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Cards -->
+    <div class="col-md-8">
+        <div class="row g-4 mb-4">
+            <div class="col-sm-6">
+                <div class="stat-card">
+                    <h5 class="text-muted">Attendance Rate</h5>
+                    <h2 class="fw-bold text-success">{{ attendance_rate|floatformat:1 }}%</h2>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="stat-card">
+                    <h5 class="text-muted">Average Grade</h5>
+                    <h2 class="fw-bold text-warning">{{ avg_grade|floatformat:2 }}</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-dark border-secondary p-4 shadow">
+            <h5 class="card-title text-muted mb-4">Academic Performance Trend</h5>
+            {% if grade_values %}
+                <canvas id="performanceChart" style="max-height:300px;"></canvas>
+            {% else %}
+                <p class="text-muted text-center py-5">No academic grades recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if grade_values %}
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ grade_labels|safe }},
+                datasets: [{
+                    label: 'Marks Obtained',
+                    data: {{ grade_values|safe }},
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

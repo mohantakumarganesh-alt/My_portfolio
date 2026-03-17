@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Attendance | Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-4 border-bottom border-secondary">
+    <h1 class="h2">Mark Attendance</h1>
+    <span class="text-secondary"><i class="fas fa-calendar-check text-info me-1"></i> Selection: <strong>{{ today }}</strong></span>
+</div>
+
+{% if success_message %}
+<div class="alert alert-success alert-dismissible fade show bg-success text-white border-0 py-2" role="alert">
+    <i class="fas fa-check-circle me-1"></i> {{ success_message }}
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+<div class="card bg-dark border-secondary p-4 shadow-lg">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row align-items-center g-3 mb-4">
+            <div class="col-md-4">
+                <label class="form-label text-muted small">Target Date</label>
+                <input type="date" name="date" class="form-control form-control-sm bg-dark text-white border-secondary" value="{{ today|date:'Y-m-d' }}">
+            </div>
+            <div class="col-md-8 text-end pt-3">
+                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-save me-1"></i> Save Attendance</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">
+                            <input type="checkbox" class="form-check-input" id="checkAll">
+                        </th>
+                        <th>Student Name</th>
+                        <th>Roll No</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="present_students" value="{{ student.id }}" class="form-check-input student-check">
+                        </td>
+                        <td><strong>{{ student.name }}</strong></td>
+                        <td><span class="badge bg-secondary">{{ student.roll_no }}</span></td>
+                        <td>
+                            <span class="badge bg-danger status-badge px-2" id="status-{{ student.id }}">Absent</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-4">No student records found to monitor.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkAll = document.getElementById('checkAll');
+        const checkboxes = document.querySelectorAll('.student-check');
+        
+        checkAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => {
+                cb.checked = checkAll.checked;
+                updateStatusBadge(cb);
+            });
+        });
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                updateStatusBadge(cb);
+                const allChecked = Array.from(checkboxes).every(c => c.checked);
+                checkAll.checked = allChecked;
+            });
+        });
+
+        function updateStatusBadge(checkbox) {
+            const studentId = checkbox.value;
+            const badge = document.getElementById(`status-${studentId}`);
+            if(checkbox.checked) {
+                badge.textContent = 'Present';
+                badge.className = 'badge bg-success status-badge px-2';
+            } else {
+                badge.textContent = 'Absent';
+                badge.className = 'badge bg-danger status-badge px-2';
+            }
+        }
+    });
+</script>
+{% endblock %}

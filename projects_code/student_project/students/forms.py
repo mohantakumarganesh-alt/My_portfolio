@@ -4,7 +4,7 @@ from .models import Student, Course, Grade, Attendance
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['roll_no', 'name', 'email', 'gender', 'contact', 'dob', 'address']
+        fields = ['roll_no', 'name', 'email', 'gender', 'contact', 'dob', 'address', 'photo']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'address': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),

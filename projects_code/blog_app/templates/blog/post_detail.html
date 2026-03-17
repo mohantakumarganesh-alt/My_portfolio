@@ -32,9 +32,14 @@
                 </div>
 
                 <div class="mt-5 pt-4 d-flex justify-content-between align-items-center" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <button class="btn btn-outline-danger px-4 rounded-3">
-                        ❤️ <span>Likes</span>
-                    </button>
+                    <div class="d-flex gap-3">
+                        <a href="{% url 'post_like' post.pk %}" class="btn {% if user in post.likes.all %}btn-danger{% else %}btn-outline-danger{% endif %} px-4 rounded-3 d-flex align-items-center gap-2">
+                            <i class="fas fa-heart"></i> <span>{{ post.total_likes }}</span>
+                        </a>
+                        <a href="{% url 'post_dislike' post.pk %}" class="btn {% if user in post.dislikes.all %}btn-secondary{% else %}btn-outline-secondary{% endif %} px-4 rounded-3 d-flex align-items-center gap-2">
+                            <i class="fas fa-thumbs-down"></i> <span>{{ post.total_dislikes }}</span>
+                        </a>
+                    </div>
                     
                     {% if user == post.author %}
                         <div class="d-flex gap-2">

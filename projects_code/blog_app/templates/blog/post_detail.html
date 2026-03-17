@@ -45,6 +45,54 @@
                 </div>
             </div>
         </div>
+        </div>
+        
+        <!-- Comments Section -->
+        <div class="card blog-post-card mt-4 mb-5" style="background: rgba(15, 23, 42, 0.8);">
+            <div class="card-body" style="padding: 2.5rem;">
+                <h3 class="mb-4" style="font-family: 'Outfit', sans-serif; color: #f8fafc;">Comments ({{ comments.count }})</h3>
+                
+                <!-- Comment Form -->
+                {% if user.is_authenticated %}
+                    <div class="mb-5 p-4 rounded-3" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <h5 class="mb-3" style="color: #cbd5e1;">Add a Comment</h5>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.content }}
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #38bdf8, #818cf8); border: none;">Post Comment</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); color: #e0f2fe;">
+                        Please <a href="{% url 'login' %}" style="color: #38bdf8; font-weight: bold;">log in</a> to leave a comment.
+                    </div>
+                {% endif %}
+
+                <!-- Existing Comments -->
+                <div class="comments-list mt-4">
+                    {% for comment in comments %}
+                        <div class="d-flex mb-4 p-4 rounded-3" style="background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div class="me-3">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #64748b, #94a3b8); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white;">
+                                    {{ comment.author.username|make_list|first|upper }}
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0" style="color: #f8fafc; font-weight: 600;">{{ comment.author.username }}</h6>
+                                    <small style="color: #64748b;">{{ comment.created_at|timesince }} ago</small>
+                                </div>
+                                <p class="mb-0" style="color: #cbd5e1; line-height: 1.6;">{{ comment.content|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center" style="color: #64748b; font-style: italic;">No comments yet. Be the first to start the discussion!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

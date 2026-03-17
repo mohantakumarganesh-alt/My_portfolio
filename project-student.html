@@ -56,53 +56,41 @@
             <div class="project-header">
                 <a href="index.html#projects" class="back-link"><i class="fas fa-arrow-left"></i> Back to Projects</a>
                 <h1 class="hero-title">Student Management System</h1>
-                <p class="hero-subtitle">Python • Tkinter • SQLite</p>
+                <p class="hero-subtitle">Python • Django • PostgreSQL • Glassmorphic UI</p>
             </div>
 
             <section class="section">
                 <h2 class="section-title">Overview</h2>
                 <p class="hero-description" style="margin: 0 auto;">
-                    A desktop GUI application built with Python and Tkinter to manage student records.
-                    It uses SQLite as a backend database to store student details like Roll No, Name, Email, Gender,
-                    Contact, and DOB.
-                    The application supports full CRUD operations (Create, Read, Update, Delete) and includes a search
-                    functionality.
+                    A cinematic, advanced Student ERP Web Application built with **Django** and loaded with **Glassmorphism CSS effects**.
+                    Featuring floating transparent navigation pills, intuitive analytical metric cards, and modular Profile grid layouts 
+                    supporting smooth elevation trigger hover visual scales accurately. Supports full Attendance and grading bundles securely.
                 </p>
             </section>
 
             <section class="section">
-                <h2 class="section-title">Source Code</h2>
+                <h2 class="section-title">Core Models (Database Schema)</h2>
                 <div class="code-block">
                     <pre>
-import tkinter as tk
-from tkinter import ttk, messagebox
-import sqlite3
+from django.db import models
 
-class StudentManagementSystem:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Student Management System")
-        self.root.geometry("1350x700+0+0")
-        
-        title = tk.Label(self.root, text="Student Management System", bd=10, relief=tk.GROOVE, font=("times new roman", 40, "bold"), bg="yellow", fg="red")
-        title.pack(side=tk.TOP, fill=tk.X)
-        
-        # ... (GUI Setup Code) ...
+class Student(models.Model):
+    roll_no = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    gender = models.CharField(max_length=1, choices=[('M', 'Male'), ('F', 'Female')])
+    contact = models.CharField(max_length=15)
+    photo = models.ImageField(upload_to='students/', blank=True, null=True)
 
-    def add_student(self):
-        if self.Roll_No_var.get() == "" or self.Name_var.get() == "":
-            messagebox.showerror("Error", "All fields are required")
-        else:
-            con = sqlite3.connect(database="students.db")
-            cur = con.cursor()
-            cur.execute("insert into students values(?,?,?,?,?,?,?)", (self.Roll_No_var.get(), self.Name_var.get(), self.Email_var.get(), self.Gender_var.get(), self.Contact_var.get(), self.Dob_var.get(), self.txt_address.get('1.0', tk.END)))
-            con.commit()
-            self.fetch_data()
-            self.clear()
-            con.close()
-            messagebox.showinfo("Success", "Record has been inserted")
+class Grade(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='grades')
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    marks_obtained = models.DecimalField(max_digits=5, decimal_places=2)
 
-    # ... (Other CRUD Methods) ...
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    date = models.DateField()
+    is_present = models.BooleanField(default=True)
 </pre>
                 </div>
             </section>

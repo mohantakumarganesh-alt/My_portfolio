@@ -42,10 +42,10 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a href="{% url 'login' %}" class="nav-link text-white me-3">Log In</a>
+                            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-3 px-3 py-2 me-3" style="border-color: rgba(56, 189, 248, 0.5); color: #f8fafc; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='rgba(56, 189, 248, 0.1)'; this.style.borderColor='#38bdf8'; this.style.transform='translateY(-2px)';" onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='rgba(56, 189, 248, 0.5)'; this.style.transform='translateY(0)';">Log In</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'signup' %}" class="btn btn-primary btn-sm rounded-3 px-3 py-2">Sign Up</a>
+                            <a href="{% url 'signup' %}" class="btn btn-primary btn-sm rounded-3 px-3 py-2" style="background: linear-gradient(135deg, #38bdf8, #818cf8); border: none; transition: all 0.3s ease; box-shadow: 0 4px 14px 0 rgba(56, 189, 248, 0.39);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(56, 189, 248, 0.6)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px 0 rgba(56, 189, 248, 0.39)';">Sign Up</a>
                         </li>
                     {% endif %}
                 </ul>

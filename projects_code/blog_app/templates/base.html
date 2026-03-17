@@ -15,8 +15,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Styles -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <!-- Lottie Web Player -->
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    
+    <style>
+        .tech-brand-icon {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tech-core {
+            width: 8px;
+            height: 8px;
+            background: #38bdf8;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8;
+            animation: core-pulse 2s infinite ease-in-out;
+        }
+        .tech-orbit-1 {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 1px dashed rgba(56, 189, 248, 0.6);
+            border-radius: 50%;
+            animation: rotate-cw 4s linear infinite;
+        }
+        .tech-orbit-2 {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            border-radius: 50%;
+            border-top-color: #818cf8;
+            border-bottom-color: transparent;
+            animation: rotate-ccw 3s linear infinite;
+        }
+        @keyframes core-pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+        @keyframes rotate-cw {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotate-ccw {
+            to { transform: rotate(-360deg); }
+        }
+    </style>
 </head>
 <body>
     <div class="blog-bg"></div>
@@ -24,7 +69,11 @@
     <nav class="navbar navbar-expand-lg app-navbar">
         <div class="container">
             <a href="/" class="navbar-brand brand d-flex align-items-center gap-2">
-                <lottie-player src="https://lottie.host/9e1cd4bd-fbcb-4ed1-a79b-25442ce9fc2c/6V2M0H6k1e.json" background="transparent" speed="1" style="width: 45px; height: 45px;" loop autoplay></lottie-player>
+                <div class="tech-brand-icon">
+                    <div class="tech-orbit-2"></div>
+                    <div class="tech-orbit-1"></div>
+                    <div class="tech-core"></div>
+                </div>
                 <span>Ganesh<span style="color: #38bdf8;">'s Blog</span></span>
             </a>
             <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="box-shadow: none;">

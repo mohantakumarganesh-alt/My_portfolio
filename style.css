@@ -810,6 +810,7 @@ body {
 
 .contact-item div {
     text-align: left;
+    min-width: 0;
 }
 
 .contact-item .label {
@@ -821,6 +822,8 @@ body {
 .contact-item .value {
     color: var(--text-primary);
     font-weight: 500;
+    word-break: break-all;
+    overflow-wrap: anywhere;
 }
 
 .social-links {

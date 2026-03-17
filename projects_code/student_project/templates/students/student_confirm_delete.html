@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Student | Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-lg-6">
+        <div class="card bg-dark border-danger p-4 shadow">
+            <h4 class="text-danger mb-4"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h4>
+            <p class="text-white">Are you sure you want to permanently delete the student profile for <strong>{{ object.name }}</strong> (Roll: <span class="badge bg-secondary">{{ object.roll_no }}</span>)?</p>
+            <p class="text-muted small">This action cannot be undone and will remove all associated grades and logs.</p>
+            <form method="POST" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Confirm Delete</button>
+                <a href="{% url 'student_list' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

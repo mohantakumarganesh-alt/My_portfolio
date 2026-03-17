@@ -46,18 +46,54 @@ body {
     overflow-x: hidden;
 }
 
-/* Background Gradient */
+/* Advanced Animated Background */
 .background-gradient {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background:
-        radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(129, 140, 248, 0.08), transparent 25%);
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
     z-index: -1;
-    pointer-events: none;
+    overflow: hidden;
+}
+
+.background-gradient::before,
+.background-gradient::after {
+    content: '';
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.15;
+    animation: float-bg 20s infinite ease-in-out;
+}
+
+.background-gradient::before {
+    background: var(--accent-primary);
+    top: -20%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.background-gradient::after {
+    background: var(--accent-secondary);
+    bottom: -20%;
+    right: -10%;
+    animation-delay: -10s;
+}
+
+@keyframes float-bg {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
 }
 
 /* Utilities */

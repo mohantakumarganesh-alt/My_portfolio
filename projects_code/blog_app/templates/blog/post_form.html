@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Edit{% else %}New{% endif %} Post - The Developer's Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6 mt-5">
+        <div class="glass-form-container">
+            <h2 class="mb-4 text-center" style="font-family: 'Outfit', sans-serif; font-weight: 700;">
+                {% if object %}Edit Post{% else %}Create New Post{% endif %}
+            </h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-4">
+                    {{ form.as_p }}
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary w-100 py-2">Save Post</button>
+                    <a href="{% if object %}{% url 'post_detail' object.pk %}{% else %}{% url 'post_list' %}{% endif %}" class="btn btn-outline-secondary w-100 py-2 border-secondary text-light">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

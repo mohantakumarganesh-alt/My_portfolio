@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Log In - The Developer's Blog{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-5 mt-5">
+        <div class="glass-form-container text-center">
+            <h2 class="mb-4" style="font-family: 'Outfit', sans-serif; font-weight: 700; color: #f8fafc;">Welcome Back</h2>
+            <form method="post" class="text-start">
+                {% csrf_token %}
+                <div class="form-group mb-4">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Log In</button>
+            </form>
+            <p class="mt-4 mb-0" style="color: #94a3b8;">
+                Don't have an account? <a href="{% url 'signup' %}" style="color: #38bdf8; font-weight: 500;">Sign up here</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ganesh's Blog{% endblock %}</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="blog-bg"></div>
+    
+    <nav class="navbar navbar-expand-lg app-navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand brand">Ganesh<span style="color: #38bdf8;">'s Blog</span></a>
+            <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="box-shadow: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link text-white me-3">Home</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item me-3 text-muted">
+                            Hi, {{ user.username }}
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-3 px-3">Log Out</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="nav-link text-white me-3">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'signup' %}" class="btn btn-primary btn-sm rounded-3 px-3 py-2">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="blog-header mb-5">
+        <div class="container">
+            <h1 class="blog-title">{% block header_title %}The Developer's Blog{% endblock %}</h1>
+            <p class="lead text-muted">{% block header_subtitle %}Thoughts, stories and ideas.{% endblock %}</p>
+        </div>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                    <div class="alert alert-dismissible fade show {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert" style="background: rgba(15, 23, 42, 0.8); border-color: rgba(255,255,255,0.1); color: #f8fafc;">
+                        {{ message }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="text-center py-4 text-muted border-top mt-5" style="border-color: rgba(255, 255, 255, 0.1) !important;">
+        <p>&copy; {% now "Y" %} Blog App Demo. Built by Ganesh.</p>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Post-logout prevention of using the back button to view cached authenticated pages
+        const isAuthenticated = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+        if (!isAuthenticated) {
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                     window.location.reload(); 
+                }
+            });
+        }
+    </script>
+</body>
+</html>

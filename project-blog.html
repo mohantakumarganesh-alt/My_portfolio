@@ -62,11 +62,9 @@
             <section class="section">
                 <h2 class="section-title">Overview</h2>
                 <p class="hero-description" style="margin: 0 auto;">
-                    A complete blog application built with the Django framework.
-                    It features user authentication, an admin panel for managing posts, and a responsive frontend
-                    designed with Bootstrap.
-                    The backend handles CRUD operations for blog posts, ensuring a seamless content management
-                    experience.
+                    A complete, fully-featured blog application built with the Django framework.
+                    It supports robust user authentication, interactive comment sections on posts, and dynamic tracking of user likes and dislikes.
+                    The backend handles complex database relationships and CRUD operations, while the frontend is designed with Bootstrap to deliver a premium, responsive, and cinematic dark-themed content management experience.
                 </p>
             </section>
 
@@ -83,11 +81,13 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='post_dislikes', blank=True)
 
-    def __str__(self):
-        return self.title
+class Comment(models.Model):
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
 </pre>
                 </div>
 
@@ -97,13 +97,16 @@ class Post(models.Model):
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 
-def post_list(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'blog/post_list.html', {'posts': posts})
-
-def post_detail(request, pk):
+@login_required
+def post_like(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+        if post.dislikes.filter(id=request.user.id).exists():
+            post.dislikes.remove(request.user)
+    return HttpResponseRedirect(reverse('post_detail', args=[str(pk)]))
 </pre>
                 </div>
             </section>

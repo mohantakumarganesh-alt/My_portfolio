@@ -15,13 +15,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Styles -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Lottie Web Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 <body>
     <div class="blog-bg"></div>
     
     <nav class="navbar navbar-expand-lg app-navbar">
         <div class="container">
-            <a href="/" class="navbar-brand brand">Ganesh<span style="color: #38bdf8;">'s Blog</span></a>
+            <a href="/" class="navbar-brand brand d-flex align-items-center gap-2">
+                <lottie-player src="https://lottie.host/9e1cd4bd-fbcb-4ed1-a79b-25442ce9fc2c/6V2M0H6k1e.json" background="transparent" speed="1" style="width: 45px; height: 45px;" loop autoplay></lottie-player>
+                <span>Ganesh<span style="color: #38bdf8;">'s Blog</span></span>
+            </a>
             <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="box-shadow: none;">
                 <i class="fas fa-bars"></i>
             </button>

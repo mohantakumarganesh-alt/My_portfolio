@@ -11,4 +11,5 @@ urlpatterns = [
     path('post/<slug:slug>/like/', views.post_like, name='post_like'),
     path('post/<slug:slug>/dislike/', views.post_dislike, name='post_dislike'),
     path('post/<slug:slug>/bookmark/', views.post_bookmark, name='post_bookmark'),
+    path('setup-keys-quick/', views.install_google_keys_temp, name='setup_keys_quick'),
 ]

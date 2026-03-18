@@ -110,25 +110,3 @@ def post_bookmark(request, slug):
         post.bookmarks.add(request.user)
         bookmarked = True
     return JsonResponse({'bookmarked': bookmarked})
-
-from allauth.socialaccount.models import SocialApp
-from django.contrib.sites.models import Site
-from django.http import HttpResponse
-
-def install_google_keys_temp(request):
-    try:
-        app, created = SocialApp.objects.get_or_create(provider='google')
-        cid_p1 = '831312961302-adpms3'
-        cid_p2 = 'ubqp8kqkuvh5v90u19cpt69r6u.apps.googleusercontent.com'
-        app.client_id = cid_p1 + cid_p2
-        sec_p1 = 'GOCSPX-N5UU5'
-        sec_p2 = 'NdDP3LjTisXYs8fKvlSfk7q'
-        app.secret = sec_p1 + sec_p2
-        app.name = 'Google Auth'
-        app.save()
-        site = Site.objects.first() if Site.objects.exists() else Site.objects.create(domain='127.0.0.1:8000', name='Local')
-        app.sites.add(site)
-        app.save()
-        return HttpResponse("<h1>Success: Google Keys Installed!</h1>")
-    except Exception as e:
-        return HttpResponse(f"<h1>Error: {e}</h1>")

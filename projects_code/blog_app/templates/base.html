@@ -80,6 +80,10 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <form class="d-flex ms-lg-4 position-relative" style="max-width: 250px;" onsubmit="return false;">
+                    <input class="form-control me-2 bg-dark text-white border-secondary rounded-pill" type="search" placeholder="Search posts..." aria-label="Search" id="live-search-input" autocomplete="off" style="font-size: 0.85rem; padding-left: 1rem; background: rgba(15, 23, 42, 0.6) !important; border-color: rgba(255,255,255,0.1) !important;">
+                    <div id="search-suggestions" class="list-group position-absolute w-100 mt-1 d-none" style="top: 100%; left: 0; z-index: 1000; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.4); max-height: 250px; overflow-y: auto;"></div>
+                </form>
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <a href="/" class="nav-link text-white me-3">Home</a>
@@ -143,6 +147,57 @@
             window.addEventListener('pageshow', function (event) {
                 if (event.persisted) {
                      window.location.reload(); 
+                }
+            });
+        }
+        // Live Search with Debounce
+        let debounceTimer;
+        const searchInput = document.getElementById('live-search-input');
+        const suggestionsBox = document.getElementById('search-suggestions');
+
+        if (searchInput && suggestionsBox) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                const query = this.value.trim();
+
+                if (query.length === 0) {
+                    suggestionsBox.innerHTML = '';
+                    suggestionsBox.classList.add('d-none');
+                    return;
+                }
+
+                debounceTimer = setTimeout(() => {
+                    fetch(`/api/posts/?search=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsBox.innerHTML = '';
+                            if (data.length > 0) {
+                                data.forEach(post => {
+                                    const item = document.createElement('a');
+                                    item.href = `/post/${post.slug}/`;
+                                    item.className = 'list-group-item list-group-item-action border-0 text-white py-2 px-3';
+                                    item.style.background = 'transparent';
+                                    item.style.fontSize = '0.85rem';
+                                    item.style.transition = 'all 0.2s';
+                                    item.innerHTML = `<div class="fw-semibold">${post.title}</div><small class="text-muted" style="font-size: 0.75rem;">${post.read_time} min read</small>`;
+                                    
+                                    item.addEventListener('mouseover', () => item.style.backgroundColor = 'rgba(56, 189, 248, 0.1)');
+                                    item.addEventListener('mouseout', () => item.style.backgroundColor = 'transparent');
+                                    
+                                    suggestionsBox.appendChild(item);
+                                });
+                                suggestionsBox.classList.remove('d-none');
+                            } else {
+                                suggestionsBox.innerHTML = '<div class="p-2 text-muted text-center" style="font-size: 0.8rem;">No results found</div>';
+                                suggestionsBox.classList.remove('d-none');
+                            }
+                        });
+                }, 300);
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                    suggestionsBox.classList.add('d-none');
                 }
             });
         }

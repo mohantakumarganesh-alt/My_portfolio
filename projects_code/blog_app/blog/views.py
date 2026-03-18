@@ -9,8 +9,8 @@ def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
     comments = post.comments.all().order_by('-created_at')
     
     if request.method == 'POST':
@@ -22,7 +22,7 @@ def post_detail(request, pk):
             comment.post = post
             comment.author = request.user
             comment.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('post_detail', slug=post.slug)
     else:
         form = CommentForm()
         
@@ -46,6 +46,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     template_name = 'blog/post_form.html'
     fields = ['title', 'content']
+    slug_field = 'slug'
     success_url = reverse_lazy('post_list')
 
     def test_func(self):
@@ -55,34 +56,57 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
+    slug_field = 'slug'
     success_url = reverse_lazy('post_list')
 
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
 
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
 @login_required
-def post_like(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_like(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
     else:
         post.likes.add(request.user)
+        liked = True
         if post.dislikes.filter(id=request.user.id).exists():
             post.dislikes.remove(request.user)
-    return HttpResponseRedirect(reverse('post_detail', args=[str(pk)]))
+    return JsonResponse({
+        'liked': liked,
+        'likes_count': post.total_likes(),
+        'dislikes_count': post.total_dislikes()
+    })
 
 @login_required
-def post_dislike(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_dislike(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    disliked = False
     if post.dislikes.filter(id=request.user.id).exists():
         post.dislikes.remove(request.user)
     else:
         post.dislikes.add(request.user)
+        disliked = True
         if post.likes.filter(id=request.user.id).exists():
             post.likes.remove(request.user)
-    return HttpResponseRedirect(reverse('post_detail', args=[str(pk)]))
+    return JsonResponse({
+        'disliked': disliked,
+        'likes_count': post.total_likes(),
+        'dislikes_count': post.total_dislikes()
+    })
+
+@login_required
+def post_bookmark(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    bookmarked = False
+    if post.bookmarks.filter(id=request.user.id).exists():
+        post.bookmarks.remove(request.user)
+    else:
+        post.bookmarks.add(request.user)
+        bookmarked = True
+    return JsonResponse({'bookmarked': bookmarked})

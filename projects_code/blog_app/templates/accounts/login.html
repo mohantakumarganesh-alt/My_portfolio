@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load socialaccount %}
 
 {% block title %}Log In - The Developer's Blog{% endblock %}
 
@@ -12,8 +13,16 @@
                 <div class="form-group mb-4">
                     {{ form.as_p }}
                 </div>
-                <button type="submit" class="btn btn-primary w-100 py-2 mt-2">Log In</button>
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2" style="background: linear-gradient(135deg, #38bdf8, #818cf8); border: none; font-weight: 600;">Log In</button>
             </form>
+            
+            <div class="mt-4 text-center">
+                <p class="text-muted" style="font-size: 0.9rem;">Or sign in with:</p>
+                <a href="/accounts/google/login/" class="btn btn-outline-light w-100 py-2 d-flex align-items-center justify-content-center gap-2" style="border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #f8fafc; font-weight: 500; transition: all 0.3s ease;">
+                    <i class="fab fa-google text-danger"></i> Login with Google
+                </a>
+            </div>
+
             <p class="mt-4 mb-0" style="color: #94a3b8;">
                 Don't have an account? <a href="{% url 'signup' %}" style="color: #38bdf8; font-weight: 500;">Sign up here</a>
             </p>

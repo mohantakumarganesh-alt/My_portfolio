@@ -20,23 +20,28 @@
                     </div>
                     <div class="card-body">
                         <h2 class="card-title">
-                            <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+                            <a href="{% url 'post_detail' slug=post.slug %}">{{ post.title }}</a>
                         </h2>
                         <p class="card-text text-muted">
-                            Posted on {{ post.created_at|date:"F j, Y" }} by {{ post.author.username }}
+                            Posted on {{ post.created_at|date:"F j, Y" }} by {{ post.author.username }} &middot; {{ post.read_time }} min read
                         </p>
-                        <p class="card-text">{{ post.content|truncatewords:40 }}</p>
+                        <p class="card-text">{{ post.content|truncatewords:40|striptags }}</p>
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <div class="d-flex gap-2">
-                                <a href="{% url 'post_like' post.pk %}" class="btn {% if user in post.likes.all %}btn-danger{% else %}btn-outline-danger{% endif %} btn-sm rounded-3 d-flex align-items-center gap-2">
+                                <a href="#" class="like-btn btn {% if user in post.likes.all %}btn-danger{% else %}btn-outline-danger{% endif %} btn-sm rounded-3 d-flex align-items-center gap-2" data-url="{% url 'post_like' slug=post.slug %}">
                                     <i class="fas fa-heart"></i> <span>{{ post.total_likes }}</span>
                                 </a>
-                                <a href="{% url 'post_dislike' post.pk %}" class="btn {% if user in post.dislikes.all %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm rounded-3 d-flex align-items-center gap-2">
+                                <a href="#" class="dislike-btn btn {% if user in post.dislikes.all %}btn-secondary{% else %}btn-outline-secondary{% endif %} btn-sm rounded-3 d-flex align-items-center gap-2" data-url="{% url 'post_dislike' slug=post.slug %}">
                                     <i class="fas fa-thumbs-down"></i> <span>{{ post.total_dislikes }}</span>
                                 </a>
+                                {% if user.is_authenticated %}
+                                <a href="#" class="bookmark-btn btn {% if user in post.bookmarks.all %}btn-warning{% else %}btn-outline-warning{% endif %} btn-sm rounded-3 d-flex align-items-center gap-2" data-url="{% url 'post_bookmark' slug=post.slug %}">
+                                    <i class="fas fa-bookmark"></i>
+                                </a>
+                                {% endif %}
                             </div>
-                            <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary">
+                            <a href="{% url 'post_detail' slug=post.slug %}" class="btn btn-primary">
                                 Read More & Comments
                             </a>
                         </div>
@@ -85,4 +90,79 @@
         </div>
     </div>
 </div>
+{% if user.is_authenticated %}
+<script>
+    function handleAction(url, callback) {
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => callback(data))
+        .catch(err => console.error('Error:', err));
+    }
+
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-url');
+            const row = this.closest('.d-flex'); 
+            handleAction(url, data => {
+                const likeSpan = this.querySelector('span');
+                const dislikeBtn = row.querySelector('.dislike-btn');
+                const dislikeSpan = dislikeBtn.querySelector('span');
+
+                likeSpan.innerText = data.likes_count;
+                dislikeSpan.innerText = data.dislikes_count;
+
+                if (data.liked) {
+                    this.classList.replace('btn-outline-danger', 'btn-danger');
+                } else {
+                    this.classList.replace('btn-danger', 'btn-outline-danger');
+                }
+                dislikeBtn.classList.replace('btn-secondary', 'btn-outline-secondary');
+            });
+        });
+    });
+
+    document.querySelectorAll('.dislike-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-url');
+            const row = this.closest('.d-flex');
+            handleAction(url, data => {
+                const dislikeSpan = this.querySelector('span');
+                const likeBtn = row.querySelector('.like-btn');
+                const likeSpan = likeBtn.querySelector('span');
+
+                dislikeSpan.innerText = data.dislikes_count;
+                likeSpan.innerText = data.likes_count;
+
+                if (data.disliked) {
+                    this.classList.replace('btn-outline-secondary', 'btn-secondary');
+                } else {
+                    this.classList.replace('btn-secondary', 'btn-outline-secondary');
+                }
+                likeBtn.classList.replace('btn-danger', 'btn-outline-danger');
+            });
+        });
+    });
+
+    document.querySelectorAll('.bookmark-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-url');
+            handleAction(url, data => {
+                if (data.bookmarked) {
+                    this.classList.replace('btn-outline-warning', 'btn-warning');
+                } else {
+                    this.classList.replace('btn-warning', 'btn-outline-warning');
+                }
+            });
+        });
+    });
+</script>
+{% endif %}
 {% endblock %}

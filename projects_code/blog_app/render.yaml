@@ -21,3 +21,9 @@ services:
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
+      - key: SITE_DOMAIN
+        value: "my-portfolio-yphw.onrender.com"
+      - key: GOOGLE_CLIENT_ID
+        sync: false   # Set manually in Render dashboard
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false   # Set manually in Render dashboard

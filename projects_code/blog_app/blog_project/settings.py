@@ -94,6 +94,17 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# django-allauth configuration (required for v65+)
+ACCOUNT_LOGIN_METHODS = {'username', 'email'}  # Methods for regular (non-social) login
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # email required, no username
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Google already verified the email, skip verification
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-create user account on first Google login
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Allow GET requests to the login endpoint
+
+# Use HTTPS in production for OAuth callbacks
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https' if not os.environ.get('DEBUG', 'True') == 'True' else 'http'
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 

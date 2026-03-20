@@ -6,6 +6,7 @@ databases:
 services:
   - type: web
     name: blog-app
+    rootDir: projects_code/blog_app
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn blog_project.wsgi:application --bind 0.0.0.0:10000"

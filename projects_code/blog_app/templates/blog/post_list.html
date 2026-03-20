@@ -63,7 +63,7 @@
             <div class="card-body">
                 <form method="get" action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="q" placeholder="Search for..." style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); color: #f8fafc;">
+                        <input type="text" class="form-control" name="q" placeholder="Search for..." value="{{ q|default:'' }}" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); color: #f8fafc;">
                         <button class="btn btn-secondary" type="submit" style="background: rgba(56, 189, 248, 0.2); border: 1px solid rgba(56, 189, 248, 0.3); color: #f8fafc;">Go!</button>
                     </div>
                 </form>
@@ -82,10 +82,14 @@
         <div class="widget-card">
             <div class="card-header">Categories</div>
             <ul class="list-group list-group-flush widget-list-group">
-                <li class="list-group-item"><a href="#">Web Development</a></li>
-                <li class="list-group-item"><a href="#">Python</a></li>
-                <li class="list-group-item"><a href="#">Tutorials</a></li>
-                <li class="list-group-item"><a href="#">Django Framework</a></li>
+                <li class="list-group-item {% if not selected_category %}active{% endif %}">
+                    <a href="?">All Posts</a>
+                </li>
+                {% for cat in categories %}
+                <li class="list-group-item {% if selected_category == cat.slug %}active{% endif %}">
+                    <a href="?category={{ cat.slug }}">{{ cat.name }}</a>
+                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>

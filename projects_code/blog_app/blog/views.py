@@ -2,12 +2,29 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .models import Post, Comment
+from django.db.models import Q
+from .models import Post, Comment, Category
 from .forms import CommentForm
 
 def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    categories = Category.objects.all()
+    
+    query = request.GET.get('q')
+    category_slug = request.GET.get('category')
+    
+    if query:
+        posts = posts.filter(Q(title__icontains=query) | Q(content__icontains=query))
+        
+    if category_slug:
+        posts = posts.filter(category__slug=category_slug)
+        
+    return render(request, 'blog/post_list.html', {
+        'posts': posts,
+        'categories': categories,
+        'q': query,
+        'selected_category': category_slug
+    })
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)

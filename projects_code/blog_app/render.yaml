@@ -27,3 +27,4 @@ services:
         sync: false   # Set manually in Render dashboard
       - key: GOOGLE_CLIENT_SECRET
         sync: false   # Set manually in Render dashboard
+  postDeployCommand: "python manage.py migrate"

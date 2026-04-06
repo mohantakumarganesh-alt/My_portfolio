@@ -21,4 +21,6 @@ services:
         sync: false   # Set manually in Render dashboard
       - key: GOOGLE_CLIENT_SECRET
         sync: false   # Set manually in Render dashboard
-  postDeployCommand: "python manage.py migrate"
+      - key: PYTHON_VERSION
+        value: "3.11.4"
+    postDeployCommand: "python manage.py migrate"

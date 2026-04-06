@@ -8,7 +8,7 @@ services:
     name: blog-app
     rootDir: projects_code/blog_app
     env: python
-    buildCommand: "./build.sh"
+    buildCommand: "sh ./build.sh"
     startCommand: "gunicorn blog_project.wsgi:application --bind 0.0.0.0:10000"
     envVars:
       - key: DEBUG

@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-key')
 
 # DEBUG should be False in production (when an environment variable is set to False, we cast it)
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = True # Temporarily hardcoded for debugging 500 error
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
